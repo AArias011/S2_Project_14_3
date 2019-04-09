@@ -45,11 +45,40 @@ var wsCount = 0;
 
 //This function creates the node tree for the source article on the page 
 function makeTree() {
-      var aside = document.createElement("aside");
-      aside.setAttribute("id", "treeBox");
-      var h1 = document.createAttribute("h1");
+      var birdBox = document.createElement("aside");
+      birdBox.setAttribute("id", "treeBox");
+      var nodeTree = document.createElement("h1");
+      nodeTree.textContent = "Node Tree";
+
+      birdBox.appendChild(nodeTree);
+      document.getElementById("main").appendChild(birdBox);
+
+      var nodeList = document.createElement("ol");
+      birdBox.appendChild(nodeList);
+
+      var sourceArticle = document.querySelectorAll("#main article");
+
+      makeBranches(sourceArticle, nodeList);
+
 }
 
+//this function will be used to append node branches to the node tree diagram
+function makeBranches(treeNode, nestedList) {
+      nodeCount += 1;
+      var liElem = document.createElement("li");
+      liElem.innerHTML += "+--";
+      var spanElem = document.createElement("span");
+
+      liElem.appendChild(spanElem);
+      nestedList.appendChild(liElem);
+
+      elemCount += 1;
+
+      if (treeNode === n) {
+            var spanElem = document.createAttribute("");
+      }
+
+}
 
 
 function isWhiteSpaceNode(tString) {

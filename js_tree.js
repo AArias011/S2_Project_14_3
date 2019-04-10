@@ -36,35 +36,44 @@
       Returns true if tString represents the text of a white space text
       node and false if it doesn't
 */
-window.onload = makeTree;
+
 
 var nodeCount = 0;
 var elemCount = 0;
 var textCount = 0;
 var wsCount = 0;
 
+window.onload = makeTree;
+
 //This function creates the node tree for the source article on the page 
 function makeTree() {
+      // This code creates the aside element fragment
       var birdBox = document.createElement("aside");
-      birdBox.setAttribute("id", "treeBox");
-      var nodeTree = document.createElement("h1");
-      nodeTree.textContent = "Node Tree";
+      birdBox.id = "treeBox";
+      birdBox.innerHTML = "<h1>Node Tree </h1>";
 
-      birdBox.appendChild(nodeTree);
-      document.getElementById("main").appendChild(birdBox);
 
+      var tree = document.getElementById("main");
+
+      tree.appendChild(birdBox);
+      //this is the foundation of the node tree 
       var nodeList = document.createElement("ol");
       birdBox.appendChild(nodeList);
-
-      var sourceArticle = document.querySelectorAll("#main article");
+      //This code points to the elements in the CSS selector
+      var sourceArticle = document.querySelector("#main article");
 
       makeBranches(sourceArticle, nodeList);
-
+      //These commands to display the total count of nodes, element nodes, text nodes, and whitespace nodes
+      document.getElementById("totalNodes").textContent = nodeCount;
+      document.getElementById("elemNodes").textContent = elemCount;
+      document.getElementById("textNodes").textContent = textCount;
+      document.getElementById("wsNodes").textContent = wsCount;
 }
 
 //this function will be used to append node branches to the node tree diagram
 function makeBranches(treeNode, nestedList) {
-      nodeCount += 1;
+      nodeCount++;
+      //This code creates the span element fragment
       var liElem = document.createElement("li");
       liElem.innerHTML += "+--";
       var spanElem = document.createElement("span");
@@ -72,10 +81,32 @@ function makeBranches(treeNode, nestedList) {
       liElem.appendChild(spanElem);
       nestedList.appendChild(liElem);
 
-      elemCount += 1;
+      if (treeNode.nodeType === 1) {
+            elemCount++;
+            spanElem.setAttribute("class", "elementNode");
+            spanElem.textContent = "<" + treeNode.nodeName + ">";
+      } else if (treeNode.nodeType === 3) {
+            textCount++;
+            var textString = treeNode.nodeValue;
+            // this determines whether a text node represents white space or not
+            if (isWhiteSpaceNode(textString)) {
+                  wsCount++;
+                  spanElem.setAttribute("class", "whiteSpaceNode");
+                  spanElem.textContent = "#text";
+            } else {
+                  spanElem.setAttribute("class", "textNode");
+                  spanElem.textContent = textString;
+            }
 
-      if (treeNode === n) {
-            var spanElem = document.createAttribute("");
+      }
+      if (treeNode.childNodes.length > 0) {
+            //This code creates the ordered list element fragment
+            var newList = document.createElement("ol");
+            newList.innerHTML = "|";
+            nestedList.appendChild(newList);
+            for (var n = treeNode.firstChild; n !== null; n = n.nextSibling) {
+                  makeBranches(n, newList);
+            }
       }
 
 }
